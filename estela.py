@@ -41,7 +41,9 @@ driver.get("https://podcastcharts.byspotify.com/br")
 wait = WebDriverWait(driver, 10)
 
 # seleciona somente os podcasts da categoria ciência
-dropdown =  wait.until(driver.find_element(By.ID, "categoryDropdown"))
+dropdown = wait.until(
+    expected_conditions.element_to_be_clickable((By.ID, "categoryDropdown"))
+)
 dropdown.click()
 buttons = driver.find_elements(By.CSS_SELECTOR, ".relative.transition-all")
 for button in buttons:
