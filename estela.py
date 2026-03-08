@@ -6,13 +6,18 @@ from selenium.webdriver.support import expected_conditions
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
+import os
+import json
+
 import time
 
 # inicializar API do google sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-creds = Credentials.from_service_account_file(
-    "credentials.json",
+creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+
+creds = Credentials.from_service_account_info(
+    creds_dict,
     scopes=SCOPES
 )
 
