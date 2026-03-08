@@ -2,9 +2,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.chrome.options import Options
 
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
+
 
 import os
 import json
@@ -28,14 +30,18 @@ sheet = service.spreadsheets()
 SPREADSHEET_ID = "1QCmmgq-d9DNWk6w2hI-FgYVHZ8qveAuov44qUiGTkYs"
 
 #inicializar objetos
+options = Options()
+options.add_argument("--headless=new")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=options)
 driver.get("https://podcastcharts.byspotify.com/br")
 
 wait = WebDriverWait(driver, 10)
 
 # seleciona somente os podcasts da categoria ciência
-dropdown = driver.find_element(By.ID, "categoryDropdown")
+dropdown =  wait.until(driver.find_element(By.ID, "categoryDropdown"))
 dropdown.click()
 buttons = driver.find_elements(By.CSS_SELECTOR, ".relative.transition-all")
 for button in buttons:
