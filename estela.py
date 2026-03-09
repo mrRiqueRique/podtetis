@@ -107,7 +107,7 @@ podcasts = dict(sheet.values().get(
     ).execute()["values"])
 
 for i in range(len(top[0])):
-    factor = (50 - i)/50*currentDay
+    factor = (50 - i)/(50*currentDay)
     if top[0][i] in podcasts:
         podcasts[top[0][i]] = float(podcasts[top[0][i]].replace(',', '.')) + factor
     else:
