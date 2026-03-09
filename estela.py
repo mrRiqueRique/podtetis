@@ -101,18 +101,17 @@ sheet.values().update(
 ).execute()
 
 # AGORA PRO DICIONARIO
-podcasts = dict(
-    sheet.values().get(
+podcasts = dict(sheet.values().get(
         spreadsheetId=SPREADSHEET_ID,
         range="info!A:B"
-    ).execute()["values"]
-)
+    ).execute()["values"])
 
-for podcast in top[0]:
-    if podcast in podcasts:
-        podcasts[podcast] = int(podcasts[podcast]) + 1
+for i in range(len(top[0])):
+    factor = (50 - i)/50*currentDay
+    if top[0][i] in podcasts:
+        podcasts[top[0][i]] = float(podcasts[top[0][i]]) + factor
     else:
-        podcasts[podcast] = 1
+        podcasts[top[0][i]] = factor
 
 # atualizar values
 vezes = []
