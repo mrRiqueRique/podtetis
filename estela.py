@@ -117,6 +117,7 @@ for i in range(len(top[0])):
 vezes = []
 for podcast in podcasts:
     vezes.append([podcast, podcasts[podcast]])
+vezes.sort(key=lambda x: x[1], reverse=True)
 
 sheet.values().update(
     spreadsheetId=SPREADSHEET_ID,
