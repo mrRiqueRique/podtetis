@@ -116,8 +116,8 @@ for i in range(len(top[0])):
 # atualizar values
 vezes = []
 for podcast in podcasts:
-    vezes.append([podcast, podcasts[podcast]])
-vezes.sort(key=lambda x: float(str(x[1])), reverse=True)
+    vezes.append([podcast, str(podcasts[podcast]).replace(',', '.')])
+vezes.sort(key=lambda x: float(x[1]), reverse=True)
 
 sheet.values().update(
     spreadsheetId=SPREADSHEET_ID,
