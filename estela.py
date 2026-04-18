@@ -17,8 +17,7 @@ import time
 # inicializar API do google sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-with open("credentials.json") as f:
-    creds_dict = json.load(f)
+creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS"])
 
 creds = Credentials.from_service_account_info(
     creds_dict,
