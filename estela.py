@@ -8,6 +8,7 @@ from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
 
+
 import os
 import json
 
@@ -16,7 +17,8 @@ import time
 # inicializar API do google sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+with open("credentials.json") as f:
+    creds_dict = json.load(f)
 
 creds = Credentials.from_service_account_info(
     creds_dict,
@@ -41,33 +43,53 @@ driver.get("https://podcastcharts.byspotify.com/br")
 wait = WebDriverWait(driver, 10)
 
 # seleciona somente os podcasts da categoria ciência
-dropdown = wait.until(
-    expected_conditions.element_to_be_clickable((By.ID, "categoryDropdown"))
-)
-dropdown.click()
-buttons = driver.find_elements(By.CSS_SELECTOR, ".relative.transition-all")
-for button in buttons:
-    if button.text == "Ciências":
-        ciencia = button    
-    
-ciencia.click()
-
-time.sleep(2)
-
-list_container = wait.until(
-    expected_conditions.presence_of_element_located(
-        (By.CSS_SELECTOR, ".List_list__0oF1W")
+dropdowns = wait.until(
+    expected_conditions.presence_of_all_elements_located(
+        (By.CSS_SELECTOR, "button[data-encore-id='dropdown']")
     )
 )
 
-items = list_container.find_elements(By.CSS_SELECTOR, ".Show_show__default__2x1b_")
+dropdown = dropdowns[2]  # "Top Podcasts"
+
+
+dropdown.click()
+time.sleep(2)
+
+dropdown_list = wait.until(
+    expected_conditions.presence_of_element_located(
+        (By.CSS_SELECTOR, "[data-encore-id='dropdownList']")
+    )
+)
+
+# NOW search inside the list
+options = dropdown_list.find_elements(
+    By.CSS_SELECTOR, "[data-encore-id='dropdownLink']"
+)
+
+for option in options:
+    if option.text == "Science":
+        science = option
+
+driver.execute_script("arguments[0].click();", science)
+
+time.sleep(0.5)
+
+podcast_list = wait.until(
+    expected_conditions.presence_of_element_located(
+        (By.CSS_SELECTOR, "[class*='PodcastList_list']")
+    )
+)
+
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+items = podcast_list.find_elements(By.CSS_SELECTOR, "[class*='PodcastListRow_row']")
 
 top = [[], []]
 for item in items:
     text = item.text.split('\n')
     top[0].append(text[2])
     top[1].append(text[3])
-
+    print(top[0], top[1])
 driver.quit()
 
 currentDay = int(
@@ -127,12 +149,3 @@ sheet.values().update(
         "values": vezes
     }
 ).execute()
-
-
-
-# vezes = sheet.values().get(
-#     spreadsheetId=SPREADSHEET_ID,
-#     range="info!B:B"
-# ).execute()["values"]
-
-# print(vezes)
