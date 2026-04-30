@@ -128,10 +128,7 @@ podcasts = dict(sheet.values().get(
 
 for i in range(len(top[0])):
     factor = (50 - i)/50
-    if top[0][i] in podcasts:
-        podcasts[top[0][i]] = round((float(podcasts[top[0][i]].replace(',', '.')) + factor), 4)
-    else:
-        podcasts[top[0][i]] = factor
+    podcasts[top[0][i]] = round(float(podcasts.get(top[0][i], 0)) + factor, 4)
 
 # atualizar values
 vezes = []
