@@ -88,7 +88,6 @@ for item in items:
     text = item.text.split('\n')
     top[0].append(text[2])
     top[1].append(text[3])
-    print(top[0], top[1])
 driver.quit()
 
 currentDay = int(
